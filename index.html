@@ -7,13 +7,14 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* خلفية أزرق في أسود لامع وعميقة */
+        /* خلفية أزرق في أسود لامع وعميقة بالكامل */
         body, html { 
             margin: 0; 
             padding: 0; 
             width: 100%; 
             height: 100%; 
             background: linear-gradient(135deg, #020617 0%, #0f172a 40%, #1e3a8a 100%); 
+            background-attachment: fixed;
             overflow-x: hidden; 
         }
         
@@ -32,16 +33,12 @@
         /* شاشة الدخول - أزرق فاتح */
         #welcome-screen { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; }
 
-        /* فريم أسود طويل أنيق وشفاف للمحتوى الداخلي */
-        .long-frame { 
-            background: rgba(0, 0, 0, 0.75); 
-            padding: 40px 30px; 
-            border-radius: 30px; 
-            border: 1px solid rgba(59, 130, 246, 0.3); 
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.1); 
+        /* حاوية المحتوى الرئيسية */
+        .content-wrapper { 
             max-width: 550px; 
             width: 100%; 
             color: #ffffff;
+            padding: 20px 10px;
         }
 
         .name-title { font-size: 5rem; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
@@ -50,39 +47,50 @@
         .btn:hover { background-color: #2563eb; transform: translateY(-2px); }
         .btn-continue { background-color: white; color: #1e3a8a; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
 
-        /* تنسيق الوقت داخل الفريم الأسود */
-        .timer-box { font-size: 1.5rem; font-weight: bold; color: #60a5fa; margin: 20px 0; line-height: 1.8; text-shadow: 0 0 10px rgba(96, 165, 250, 0.2); }
+        /* فريم شفاف للوقت بحواف زرقاء مضيئة وبارزة */
+        .timer-frame {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 25px 0;
+            backdrop-filter: blur(2px);
+        }
+
+        /* تنسيق الوقت المضيء داخل الفريم */
+        .timer-box { font-size: 1.6rem; font-weight: bold; color: #60a5fa; line-height: 1.8; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
         
-        /* تنسيق الرسالة الطويلة */
+        /* الرسالة طويلة وحرة بدون أي فريم لتبدو مدمجة مع الخلفية والنجوم */
         .love-letter { 
-            font-size: 1.15rem; 
-            line-height: 1.9; 
-            color: #e2e8f0; 
-            margin: 25px 0; 
-            background: rgba(255, 255, 255, 0.05); 
-            padding: 20px; 
-            border-radius: 20px; 
-            border-right: 4px solid #3b82f6; 
+            font-size: 1.25rem; 
+            line-height: 2; 
+            color: #f8fafc; 
+            margin: 35px 0; 
+            padding: 10px;
             text-align: right; 
+            background: none;
+            border: none;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
         }
         
-        /* ألبوم صور كبير وواضح */
+        /* ألبوم صور كبير وواضح وبدون فريم حوله */
         .gallery { 
             display: flex; 
             flex-direction: column; 
-            gap: 20px; 
+            gap: 25px; 
             margin-top: 25px; 
             width: 100%;
         }
         
-        /* تكبير حجم الصور وعرضها بشكل فخم */
+        /* تكبير حجم الصور لتظهر بشكل فخم ومميز */
         .gallery img { 
             width: 100%; 
-            height: 280px; 
+            height: 320px; 
             object-fit: cover; 
             border-radius: 20px; 
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.5);
             transition: transform 0.3s ease;
         }
         .gallery img:hover { transform: scale(1.02); }
@@ -90,7 +98,7 @@
 </head>
 <body>
 
-    <!-- نجوم الخلفية -->
+    <!-- نجوم الخلفية الثابتة والمتحركة -->
     <div class="stars" id="starsBox"></div>
 
     <!-- الشاشة 1: الدخول -->
@@ -99,16 +107,18 @@
         <button class="btn btn-continue" onclick="goNext()">Continue</button>
     </div>
 
-    <!-- الشاشة 2: فريم الوقت الطويل والرسالة -->
+    <!-- الشاشة 2: الوقت والرسالة مباشرة على الخلفية اللامعة -->
     <div id="counter-screen" class="screen">
-        <div class="long-frame">
-            <h2 style="color: #60a5fa; margin-top: 0; font-size: 1.8rem;">تاريخ أول لقاء جمعنا 📅</h2>
-            <p style="color: #94a3b8; font-size: 1.1rem;">عرفتك في يوم: <span id="start-date-text"></span></p>
+        <div class="content-wrapper">
+            <h2 style="color: #60a5fa; margin-top: 0; font-size: 2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">تاريخ أول لقاء جمعنا 📅</h2>
+            <p style="color: #cbd5e1; font-size: 1.15rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">عرفتك في يوم: <span id="start-date-text"></span></p>
             
-            <!-- فريم الوقت المحدث -->
-            <div id="timer" class="timer-box">جاري الحساب...</div>
+            <!-- فريم شفاف بحواف بارزة لحماية وعرض الوقت فقط -->
+            <div class="timer-frame">
+                <div id="timer" class="timer-box">جاري الحساب...</div>
+            </div>
             
-            <!-- الرسالة الطويلة بداخل الفريم الأسود -->
+            <!-- الرسالة الطويلة حرة بالكامل وتظهر خلفها النجوم بوضوح -->
             <div class="love-letter">
                 عايز اقولك مهما بعدنا هفضل احبك لاني اول مره الاحساس دا احسو مع حد بحبك جدا وهفضل احبك عمري كلو ي كل عمري وربنا يخليكي ليا ونفضل سوا ي حبيبت عيني بحبك لاخر عمري ❤️
             </div>
@@ -117,10 +127,10 @@
         </div>
     </div>
 
-    <!-- الشاشة 3: ألبوم الصور الكبير -->
+    <!-- الشاشة 3: ألبوم الصور الكبير الحر -->
     <div id="photos-screen" class="screen" style="overflow-y: auto; padding: 40px 20px;">
-        <div class="long-frame">
-            <h2 style="color: #60a5fa; margin-top: 0; font-size: 1.8rem;">ألبوم ذكرياتنا الصغير 📸</h2>
+        <div class="content-wrapper">
+            <h2 style="color: #60a5fa; margin-top: 0; font-size: 2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">ألبوم ذكرياتنا الصغير 📸</h2>
             
             <div class="gallery">
                 <img src="pic1.jpg" alt="ذكرياتنا 1">
@@ -133,7 +143,7 @@
         </div>
     </div>
 
-    <!-- مشغل الموسيقى الثابت لضمان التشغيل في كل الصفحات دون انقطاع -->
+    <!-- مشغل الموسيقى الثابت خلف الكواليس -->
     <audio id="bg-music" loop>
         <source src="song.mp3" type="audio/mpeg">
     </audio>
@@ -155,7 +165,6 @@
         function goNext() {
             document.getElementById('welcome-screen').classList.remove('active');
             document.getElementById('counter-screen').classList.add('active');
-            // تشغيل الأغنية فوراً وبشكل مستمر
             var audio = document.getElementById('bg-music');
             if(audio) {
                 audio.play().catch(function(e){ console.log("المتصفح يطلب ضغطة زر لتشغيل الصوت:", e) });
