@@ -7,7 +7,6 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* خلفية أزرق في أسود لامع وعميقة بالكامل */
         body, html { 
             margin: 0; 
             padding: 0; 
@@ -30,51 +29,52 @@
         .screen { display: none; width: 100%; min-height: 100vh; position: absolute; top: 0; left: 0; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2; text-align: center; }
         .active { display: flex !important; }
 
-        /* شاشة الدخول - أزرق فاتح */
         #welcome-screen { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; }
 
-        /* حاوية المحتوى الرئيسية */
         .content-wrapper { 
             max-width: 550px; 
             width: 100%; 
             color: #ffffff;
-            padding: 20px 10px;
+            padding: 10px;
         }
 
         .name-title { font-size: 5rem; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
         
-        .btn { background-color: #3b82f6; color: white; border: none; padding: 14px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer; margin-top: 25px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .btn { background-color: #3b82f6; color: white; border: none; padding: 14px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer; margin-top: 20px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
         .btn:hover { background-color: #2563eb; transform: translateY(-2px); }
         .btn-continue { background-color: white; color: #1e3a8a; box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
 
-        /* فريم شفاف للوقت بحواف زرقاء مضيئة وبارزة */
+        /* فريم الوقت الشفاف المحدث بحواف زرقاء بارزة */
         .timer-frame {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 2px solid #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
             border-radius: 20px;
-            padding: 20px;
-            margin: 25px 0;
+            padding: 15px 20px;
+            margin: 20px 0;
             backdrop-filter: blur(2px);
         }
 
-        /* تنسيق الوقت المضيء داخل الفريم */
-        .timer-box { font-size: 1.6rem; font-weight: bold; color: #60a5fa; line-height: 1.8; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
+        /* تنسيق الأسطر المقسمة للوقت بخط أصغر وأرتب */
+        .timer-box { font-size: 1.25rem; font-weight: bold; color: #60a5fa; line-height: 1.6; text-shadow: 0 0 10px rgba(96, 165, 250, 0.3); }
+        .timer-days { font-size: 1.5rem; color: #ffffff; margin-bottom: 8px; font-weight: 800; display: block; }
+        .timer-sub { font-size: 1.2rem; color: #93c5fd; display: block; }
         
-        /* الرسالة طويلة وحرة بدون أي فريم لتبدو مدمجة مع الخلفية والنجوم */
+        /* تنسيق الرسالة الطويلة بخط ناعم وجميل */
         .love-letter { 
-            font-size: 1.25rem; 
+            font-size: 1.2rem; 
             line-height: 2; 
             color: #f8fafc; 
-            margin: 35px 0; 
-            padding: 10px;
+            margin: 25px 0; 
+            padding: 0 10px;
             text-align: right; 
             background: none;
             border: none;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
         
-        /* ألبوم صور كبير وواضح وبدون فريم حوله */
         .gallery { 
             display: flex; 
             flex-direction: column; 
@@ -83,7 +83,6 @@
             width: 100%;
         }
         
-        /* تكبير حجم الصور لتظهر بشكل فخم ومميز */
         .gallery img { 
             width: 100%; 
             height: 320px; 
@@ -98,7 +97,6 @@
 </head>
 <body>
 
-    <!-- نجوم الخلفية الثابتة والمتحركة -->
     <div class="stars" id="starsBox"></div>
 
     <!-- الشاشة 1: الدخول -->
@@ -107,18 +105,21 @@
         <button class="btn btn-continue" onclick="goNext()">Continue</button>
     </div>
 
-    <!-- الشاشة 2: الوقت والرسالة مباشرة على الخلفية اللامعة -->
+    <!-- الشاشة 2: الوقت والرسالة -->
     <div id="counter-screen" class="screen">
         <div class="content-wrapper">
-            <h2 style="color: #60a5fa; margin-top: 0; font-size: 2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">تاريخ أول لقاء جمعنا 📅</h2>
-            <p style="color: #cbd5e1; font-size: 1.15rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">عرفتك في يوم: <span id="start-date-text"></span></p>
+            <h2 style="color: #60a5fa; margin-top: 0; font-size: 1.8rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">تاريخ أول لقاء جمعنا 📅</h2>
+            <p style="color: #cbd5e1; font-size: 1.05rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); margin: 5px 0;">عرفتك في يوم: <span id="start-date-text"></span></p>
             
-            <!-- فريم شفاف بحواف بارزة لحماية وعرض الوقت فقط -->
+            <!-- فريم الوقت المقسوم والمرتب بخط شيك -->
             <div class="timer-frame">
-                <div id="timer" class="timer-box">جاري الحساب...</div>
+                <div id="timer" class="timer-box">
+                    <span class="timer-days" id="days-part">جاري الحساب...</span>
+                    <span class="timer-sub" id="sub-part"></span>
+                </div>
             </div>
             
-            <!-- الرسالة الطويلة حرة بالكامل وتظهر خلفها النجوم بوضوح -->
+            <!-- الرسالة الطويلة المنسقة -->
             <div class="love-letter">
                 عايز اقولك مهما بعدنا هفضل احبك لاني اول مره الاحساس دا احسو مع حد بحبك جدا وهفضل احبك عمري كلو ي كل عمري وربنا يخليكي ليا ونفضل سوا ي حبيبت عيني بحبك لاخر عمري ❤️
             </div>
@@ -127,23 +128,22 @@
         </div>
     </div>
 
-    <!-- الشاشة 3: ألبوم الصور الكبير الحر -->
+    <!-- الشاشة 3: ألبوم الصور -->
     <div id="photos-screen" class="screen" style="overflow-y: auto; padding: 40px 20px;">
         <div class="content-wrapper">
-            <h2 style="color: #60a5fa; margin-top: 0; font-size: 2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">ألبوم ذكرياتنا الصغير 📸</h2>
+            <h2 style="color: #60a5fa; margin-top: 0; font-size: 2rem; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">صورنا ي ميوي 😍</h2>
             
             <div class="gallery">
-                <img src="pic1.jpg" alt="ذكرياتنا 1">
-                <img src="pic2.jpg" alt="ذكرياتنا 2">
-                <img src="pic3.jpg" alt="ذكرياتنا 3">
-                <img src="pic4.jpg" alt="ذكرياتنا 4">
+                <img src="pic1.jpg" alt="😍 1">
+                <img src="pic2.jpg" alt="😍 2">
+                <img src="pic3.jpg" alt="😍 3">
+                <img src="pic4.jpg" alt="😍 4">
             </div>
             
             <button class="btn" style="background-color: #475569;" onclick="goBack()">رجوع</button>
         </div>
     </div>
 
-    <!-- مشغل الموسيقى الثابت خلف الكواليس -->
     <audio id="bg-music" loop>
         <source src="song.mp3" type="audio/mpeg">
     </audio>
@@ -161,13 +161,12 @@
             box.appendChild(s);
         }
 
-        // أزرار التنقل السلس للحفاظ على الموسيقى
         function goNext() {
             document.getElementById('welcome-screen').classList.remove('active');
             document.getElementById('counter-screen').classList.add('active');
             var audio = document.getElementById('bg-music');
             if(audio) {
-                audio.play().catch(function(e){ console.log("المتصفح يطلب ضغطة زر لتشغيل الصوت:", e) });
+                audio.play().catch(function(e){ console.log(e) });
             }
         }
 
@@ -186,13 +185,17 @@
         const d = new Date(2025, 4, 17); 
         document.getElementById('start-date-text').innerText = "17/5/2025";
 
+        // كود العداد المحدث لفصل الأيام عن الساعات
         setInterval(function() {
             const diff = new Date() - d;
             const days = Math.floor(diff / 86400000);
             const hours = Math.floor((diff % 86400000) / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
             const seconds = Math.floor((diff % 60000) / 1000);
-            document.getElementById("timer").innerHTML = "بقالنا سوا:<br>✨ " + days + " يوم <br>⏰ " + hours + " ساعة و " + minutes + " دقيقة و " + seconds + " ثانية";
+            
+            // حقن النص المقسم برمجياً في الأسطر المخصصة لها
+            document.getElementById("days-part").innerHTML = "بقالنا سوا: ✨ " + days + " يوم";
+            document.getElementById("sub-part").innerHTML = "⏰ " + hours + " ساعة و " + minutes + " دقيقة و " + seconds + " ثانية";
         }, 1000);
     </script>
 </body>
